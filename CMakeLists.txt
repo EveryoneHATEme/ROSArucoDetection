@@ -9,7 +9,10 @@ project(aruco_project)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
     rospy
+    geometry_msgs
     sensor_msgs
+    tf2_ros
+    tf2_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -103,7 +106,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
  INCLUDE_DIRS include
- CATKIN_DEPENDS rospy sensor_msgs
+ CATKIN_DEPENDS rospy geometry_msgs sensor_msgs tf2_ros tf2_msgs
 )
 
 ###########
@@ -157,6 +160,7 @@ ${catkin_INCLUDE_DIRS}
 # in contrast to setup.py, you can choose the destination
 catkin_install_python(PROGRAMS
   scripts/video_publisher.py
+  scripts/aruco_detector.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

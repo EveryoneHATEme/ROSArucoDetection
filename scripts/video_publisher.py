@@ -5,9 +5,9 @@ from cv_bridge import CvBridge
 
 
 class ImagePublisher:
-    def __init__(self, source: int, publisher_name: str) -> None:
+    def __init__(self, source: int) -> None:
         rospy.init_node('image_publisher')
-        self.publisher = rospy.Publisher(publisher_name, Image, queue_size=10)
+        self.publisher = rospy.Publisher('image_publisher', Image, queue_size=10)
         self.camera = cv.VideoCapture(source)
         self.bridge = CvBridge()
     
@@ -20,14 +20,18 @@ class ImagePublisher:
                 continue
 
             message = self.bridge.cv2_to_imgmsg(image)
+            message.header.frame_id = 'map'
+            message.header.stamp = rospy.Time.now()
+
             self.publisher.publish(message)
 
             rate.sleep()
+        self.camera.release()
 
 
 if __name__ == '__main__':
     try:
-        publisher = ImagePublisher(0, 'image_publisher')
+        publisher = ImagePublisher(0)
         publisher.run_loop(30)
     except rospy.ROSInterruptException:
         pass
